@@ -11,25 +11,25 @@
  * ============================================================ */
 
 SortArray::SortArray( int n ) : size(n) {
-    data = (int *) malloc( sizeof(int) * size );
+    data = new int[size];
 }
 
 SortArray::SortArray( const SortArray& o ) : size(o.size) {
-    data = (int *) malloc( sizeof(int) * size );
+    data = new int[size];
     memcpy( data, o.data, sizeof(int) * size );
 }
 
 SortArray& SortArray::operator=( const SortArray& o ) {
     if( this == &o ) return *this;
-    free( data );
+    delete[] data;
     size = o.size;
-    data = (int *) malloc( sizeof(int) * size );
+    data = new int[size];
     memcpy( data, o.data, sizeof(int) * size );
     return *this;
 }
 
 SortArray::~SortArray() {
-    free( data );
+    delete[] data;
 }
 
 void SortArray::fillRandom( int lower, int upper ) {

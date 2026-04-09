@@ -1,46 +1,43 @@
 #
-# Makefile - Sort-2026 과제
-# 1-Gobhagi 기반 모듈라 구조: C 레이어(sort_funcs.c) + C++ 레이어(sorting.cpp)
+# Makefile - Sort-2026 과제 (심플 버전)
 #
 
-CXX      := g++
-CC       := gcc
-CXXFLAGS := -Wall -O2 -std=c++17 -Iinclude
-CFLAGS   := -Wall -O2 -std=c11   -Iinclude
+# 컴파일러와 옵션 설정
+CXX = g++
+CC = gcc
+FLAGS = -Wall -O2 -Iinclude
 
-SRC_DIR  := src
-OBJ_DIR  := obj
-BIN_DIR  := bin
-TARGET   := $(BIN_DIR)/sort_bench
+# 실행 파일 이름
+TARGET = sort_bench
 
-# C 소스 (1-Gobhagi sort-one/sort.c 기반)
-C_SRCS   := $(SRC_DIR)/sort_funcs.c
-# C++ 소스
-CXX_SRCS := $(SRC_DIR)/sorting.cpp $(SRC_DIR)/main.cpp
-
-C_OBJS   := $(C_SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-CXX_OBJS := $(CXX_SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-OBJECTS  := $(C_OBJS) $(CXX_OBJS)
-
+# 빌드 규칙
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+$(TARGET): sort_funcs.o sorting.o main.o
+	$(CXX) $(FLAGS) -o $(TARGET) sort_funcs.o sorting.o main.o
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+# 각 소스 파일 컴파일
+sort_funcs.o: src/sort_funcs.c
+	$(CC) $(FLAGS) -c src/sort_funcs.c
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+sorting.o: src/sorting.cpp
+	$(CXX) $(FLAGS) -c src/sorting.cpp
 
-run:   $(TARGET) ; ./$(TARGET)
-test:  $(TARGET) ; ./$(TARGET) 1
-bench: $(TARGET) ; ./$(TARGET) 2
+main.o: src/main.cpp
+	$(CXX) $(FLAGS) -c src/main.cpp
 
+# 실행 및 테스트용
+run: all
+	./$(TARGET)
+
+test: all
+	./$(TARGET) 1
+
+bench: all
+	./$(TARGET) 2
+
+# 정리
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -f $(TARGET) *.o
 
 .PHONY: all run test bench clean
