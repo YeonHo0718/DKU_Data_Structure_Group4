@@ -14,9 +14,11 @@ void testProblem1(){
     puts(" Problem 1: 행렬 연산 테스트");
     puts("========================================\n");
 
-    srand(42);
-    int m = 3, n = 3;
+    int m, n;
+    printf("행렬 A, B의 크기(M N)를 입력하세요 (예: 3 3): ");
+    if(scanf("%d %d", &m, &n) != 2) { m = 3; n = 3; }
 
+    srand((unsigned int)time(NULL));
     Matrix A(m, n);  A.fillRandom(1, 9);
     Matrix B(m, n);  B.fillRandom(1, 9);
 
@@ -27,10 +29,14 @@ void testProblem1(){
     Matrix::divideElemWise(A, B).print("A ./ B (element-wise)");
 
     /* 곱셈 */
-    Matrix D(3,4); D.fillRandom(1,4);
-    Matrix E(4,2); E.fillRandom(1,4);
-    D.print("D (3x4)");
-    E.print("E (4x2)");
+    int m2, k2, n2;
+    printf("\n곱셈용 행렬 D(MxK), E(KxN) 크기(M K N) 입력 (예: 3 4 2): ");
+    if(scanf("%d %d %d", &m2, &k2, &n2) != 3) { m2=3; k2=4; n2=2; }
+    
+    Matrix D(m2, k2); D.fillRandom(1, 4);
+    Matrix E(k2, n2); E.fillRandom(1, 4);
+    D.print("D");
+    E.print("E");
     Matrix::multiply(D, E).print("D * E");
 
     puts("--- numpy element-wise 비교 ---");

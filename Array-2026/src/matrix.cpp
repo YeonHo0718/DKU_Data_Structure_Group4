@@ -9,34 +9,43 @@
  *    메모리를 관리함으로써 1-Gobhagi 모듈라 설계를 계승한다.
  * ============================================================ */
 
-/* ---- 생성자: common.c 의 array() 호출 ---- */
+/* ---- 생성자: new[] 사용 ---- */
 Matrix::Matrix( int r, int c ) : rows(r), cols(c) {
-    data = ::array( r, c );      /* 1-Gobhagi common.c */
+    data = new int*[rows];
+    for(int i = 0; i < rows; i++)
+        data[i] = new int[cols];
 }
 
 /* ---- 복사 생성자 ---- */
 Matrix::Matrix( const Matrix& o ) : rows(o.rows), cols(o.cols) {
-    data = ::array( rows, cols );
-    for( int i = 0; i < rows; i++ )
-        for( int j = 0; j < cols; j++ )
+    data = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        data[i] = new int[cols];
+        for(int j = 0; j < cols; j++)
             data[i][j] = o.data[i][j];
+    }
 }
 
 /* ---- 대입 연산자 ---- */
 Matrix& Matrix::operator=( const Matrix& o ) {
     if( this == &o ) return *this;
-    ::freeArray( data, rows );   /* 1-Gobhagi common.c */
+    for(int i = 0; i < rows; i++) delete[] data[i];
+    delete[] data;
+
     rows = o.rows; cols = o.cols;
-    data = ::array( rows, cols );
-    for( int i = 0; i < rows; i++ )
-        for( int j = 0; j < cols; j++ )
+    data = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        data[i] = new int[cols];
+        for(int j = 0; j < cols; j++)
             data[i][j] = o.data[i][j];
+    }
     return *this;
 }
 
-/* ---- 소멸자: common.c 의 freeArray() 호출 ---- */
+/* ---- 소멸자: delete[] 사용 ---- */
 Matrix::~Matrix() {
-    ::freeArray( data, rows );   /* 1-Gobhagi common.c */
+    for(int i = 0; i < rows; i++) delete[] data[i];
+    delete[] data;
 }
 
 /* ---- 랜덤 초기화: common.c 의 mrand() 활용 ---- */
