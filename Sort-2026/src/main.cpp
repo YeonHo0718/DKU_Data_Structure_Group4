@@ -70,19 +70,20 @@ void testSmall(){
 void benchmarkAll(){
     puts("========================================");
     puts(" 정렬 알고리즘 벤치마크");
-    puts(" (데이터 크기: 10,000 ~ 300,000)");
+    puts(" (데이터 크기: 100,000 ~ 300,000)");
     puts("========================================\n");
 
-    int sizes[] = {10000, 20000, 50000, 80000, 100000,
-                   150000, 200000, 250000, 300000};
-    int numSizes = (int)(sizeof(sizes)/sizeof(sizes[0]));
+    int sizes[] = {100000, 150000, 200000, 250000, 300000};
+    int numSizes = 5;
 
-    /* 결과 저장 */
-    double tBubble[9], tInsert[9], tSelect[9];
-    long long cBubble[9], cInsert[9], cSelect[9];
+    double tBubble[5], tInsert[5], tSelect[5];
+    long long cBubble[5], cInsert[5], cSelect[5];
 
     for(int t=0; t<numSizes; t++){
         int n = sizes[t];
+        printf("[%d/%d] n=%-7d 처리 중... ", t+1, numSizes, n);
+        fflush(stdout); // 즉시 출력
+
         srand(t + 1000);
         SortArray orig(n); orig.fillRandom(1, 1000000);
 
@@ -92,6 +93,8 @@ void benchmarkAll(){
           if(!a.isSorted()) fprintf(stderr,"ERR insert n=%d\n",n); }
         { SortArray a(orig); tSelect[t]=SortArray::measureMs([&]{return a.selectionSort();}, cSelect[t]);
           if(!a.isSorted()) fprintf(stderr,"ERR select n=%d\n",n); }
+        
+        printf("완료!\n");
     }
 
     /* 표 출력 */
