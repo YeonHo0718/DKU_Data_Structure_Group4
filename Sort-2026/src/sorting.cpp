@@ -6,8 +6,8 @@
 /* ============================================================
  * sorting.cpp
  *  — SortArray 클래스 구현
- *    메모리는 malloc/free (sort_funcs.c 와 동일 방식)
- *    정렬은 sort_funcs.c 의 C 함수 직접 호출
+ *    메모리 관리: C++ 표준 방식 (new[] / delete[])
+ *    정렬 연산: sort_funcs.c 의 C 함수 직접 호출 (래핑)
  * ============================================================ */
 
 SortArray::SortArray( int n ) : size(n) {

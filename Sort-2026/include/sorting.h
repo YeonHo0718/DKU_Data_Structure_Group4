@@ -17,12 +17,12 @@
 
 /* ============================================================
  * SortArray 클래스
- *  - 내부 배열은 malloc/free (sort_funcs.c 와 동일 방식)
+ *  - 내부 배열 관리: C++ 표준 할당 방식 (new[] / delete[])
  *  - 실제 정렬은 sort_funcs.c 의 C 함수를 직접 호출
  * ============================================================ */
 class SortArray {
 public:
-    int  *data;   /* malloc 할당 — sort_funcs.c 와 동일한 메모리 방식 */
+    int  *data;
     int   size;
 
     SortArray( int n );
