@@ -1,50 +1,43 @@
-#
 # Makefile - Array-2026 과제
-# 1-Gobhagi 기반 모듈라 구조: C 레이어(common.c) + C++ 레이어(matrix.cpp)
-#
 
-CXX      := g++
-CC       := gcc
-CXXFLAGS := -Wall -O2 -std=c++17 -Iinclude
-CFLAGS   := -Wall -O2 -std=c11   -Iinclude
+# 컴파일러와 옵션 설정
+CXX = g++
+CC = gcc
+FLAGS = -Wall -O2 -Iinclude
 
-SRC_DIR  := src
-OBJ_DIR  := obj
-BIN_DIR  := bin
-TARGET   := $(BIN_DIR)/matrix_ops
+# 실행 파일 이름
+TARGET = matrix_ops
 
-# C 소스 (1-Gobhagi common.c 포함)
-C_SRCS   := $(SRC_DIR)/common.c
-# C++ 소스
-CXX_SRCS := $(SRC_DIR)/matrix.cpp $(SRC_DIR)/main.cpp
-
-C_OBJS   := $(C_SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-CXX_OBJS := $(CXX_SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-OBJECTS  := $(C_OBJS) $(CXX_OBJS)
-
+# 빌드 규칙: 실행 파일 만들기
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+$(TARGET): common.o matrix.o main.o
+	$(CXX) $(FLAGS) -o $(TARGET) common.o matrix.o main.o
 
-# C 컴파일 (common.c)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+# 각 소스 파일 컴파일
+common.o: src/common.c
+	$(CC) $(FLAGS) -c src/common.c
 
-# C++ 컴파일
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+matrix.o: src/matrix.cpp
+	$(CXX) $(FLAGS) -c src/matrix.cpp
 
-run:  $(TARGET) ; ./$(TARGET)
-run1: $(TARGET) ; ./$(TARGET) 1
-run2: $(TARGET) ; ./$(TARGET) 2
-run3: $(TARGET) ; ./$(TARGET) 3
-run4: $(TARGET) ; ./$(TARGET) 4
+main.o: src/main.cpp
+	$(CXX) $(FLAGS) -c src/main.cpp
 
+# 테스트 실행용
+run: all
+	./$(TARGET)
+run1: all
+	./$(TARGET) 1
+run2: all
+	./$(TARGET) 2
+run3: all
+	./$(TARGET) 3
+run4: all
+	./$(TARGET) 4
+
+# 정리
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -f $(TARGET) *.o
 
 .PHONY: all run run1 run2 run3 run4 clean
