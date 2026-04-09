@@ -1,5 +1,5 @@
 #
-# Makefile - Sort-2026 과제 (심플 버전)
+# Makefile - Sort-2026 과제
 #
 
 # 컴파일러와 옵션 설정
@@ -7,24 +7,33 @@ CXX = g++
 CC = gcc
 FLAGS = -Wall -O2 -Iinclude
 
+# 디렉토리 설정
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+
 # 실행 파일 이름
-TARGET = sort_bench
+TARGET = $(BIN_DIR)/sort_bench
 
 # 빌드 규칙
 all: $(TARGET)
 
-$(TARGET): sort_funcs.o sorting.o main.o
-	$(CXX) $(FLAGS) -o $(TARGET) sort_funcs.o sorting.o main.o
+$(TARGET): $(OBJ_DIR)/sort_funcs.o $(OBJ_DIR)/sorting.o $(OBJ_DIR)/main.o
+	@mkdir -p $(BIN_DIR)
+	$(CXX) $(FLAGS) -o $(TARGET) $(OBJ_DIR)/sort_funcs.o $(OBJ_DIR)/sorting.o $(OBJ_DIR)/main.o
 
-# 각 소스 파일 컴파일
-sort_funcs.o: src/sort_funcs.c
-	$(CC) $(FLAGS) -c src/sort_funcs.c
+# 각 소스 파일 컴파일 규칙
+$(OBJ_DIR)/sort_funcs.o: $(SRC_DIR)/sort_funcs.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(FLAGS) -c $(SRC_DIR)/sort_funcs.c -o $(OBJ_DIR)/sort_funcs.o
 
-sorting.o: src/sorting.cpp
-	$(CXX) $(FLAGS) -c src/sorting.cpp
+$(OBJ_DIR)/sorting.o: $(SRC_DIR)/sorting.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(FLAGS) -c $(SRC_DIR)/sorting.cpp -o $(OBJ_DIR)/sorting.o
 
-main.o: src/main.cpp
-	$(CXX) $(FLAGS) -c src/main.cpp
+$(OBJ_DIR)/main.o: $(SRC_DIR)/main.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(FLAGS) -c $(SRC_DIR)/main.cpp -o $(OBJ_DIR)/main.o
 
 # 실행 및 테스트용
 run: all
@@ -38,6 +47,6 @@ bench: all
 
 # 정리
 clean:
-	rm -f $(TARGET) *.o
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
 .PHONY: all run test bench clean
