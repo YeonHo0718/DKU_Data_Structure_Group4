@@ -74,22 +74,22 @@ void testProblem2(){
         printf("%-8d %-8d %14.3f %14.3f %14.3f\n",m,n,ta,ts,td);
     }
 
-    /* 곱셈 테스트 크기 */
-    int sizes_mul[][2] = {
-        {10,10},{50,50},{100,100},{200,200},{300,300},
-        {400,400},{500,500},{700,700},{1000,1000},{50,500}
+    /* 곱셈 테스트 크기 (M, K, N) */
+    int sizes_mul[][3] = {
+        {10,10,10},{50,50,50},{100,100,100},{200,200,200},{300,300,300},
+        {400,400,400},{500,500,500},{700,700,700},{1000,1000,1000},{50,500,50}
     };
     int nm = sizeof(sizes_mul)/sizeof(sizes_mul[0]);
 
-    printf("\n%-8s %-8s %14s\n","M","K","Mul(ms)");
-    printf("%s\n", string(30,'-').c_str());
+    printf("\n%-8s %-8s %-8s %14s\n","M","K","N","Mul(ms)");
+    printf("%s\n", string(45,'-').c_str());
     for(int t=0; t<nm; t++){
-        int m=sizes_mul[t][0], k=sizes_mul[t][1];
+        int m=sizes_mul[t][0], k=sizes_mul[t][1], n=sizes_mul[t][2];
         srand(t+100);
         Matrix A(m,k); A.fillRandom(1,9);
-        Matrix B(k,m); B.fillRandom(1,9);
+        Matrix B(k,n); B.fillRandom(1,9);
         double tm = Matrix::measureMs([&]{Matrix::multiply(A,B);});
-        printf("%-8d %-8d %14.3f\n",m,k,tm);
+        printf("%-8d %-8d %-8d %14.3f\n",m,k,n,tm);
     }
     puts("");
 }

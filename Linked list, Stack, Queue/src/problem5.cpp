@@ -16,17 +16,7 @@
 #include <cctype>
 #include <iomanip>
 #include <vector>
-
-// ── Stack class for operators ─────────────────────────────────────────────────
-class OpStack {
-    std::stack<char> s;
-public:
-    void   push(char c)       { s.push(c); }
-    char   pop()              { char c = s.top(); s.pop(); return c; }
-    char   top()  const       { return s.top(); }
-    bool   empty()const       { return s.empty(); }
-    int    size() const       { return (int)s.size(); }
-};
+#include "Stack.h"
 
 // ── Operator precedence ───────────────────────────────────────────────────────
 int precedence(char op) {
@@ -46,7 +36,7 @@ bool isRightAssoc(char op) {
 
 // ── Core conversion function ──────────────────────────────────────────────────
 std::string infixToPostfix(const std::string& infix) {
-    OpStack    stk;
+    Stack<char>    stk;
     std::string output;
 
     for (int i = 0; i < (int)infix.size(); i++) {
@@ -95,7 +85,7 @@ std::string infixToPostfix(const std::string& infix) {
 
 // ── Evaluate postfix (for numeric expressions) ────────────────────────────────
 double evalPostfix(const std::string& postfix) {
-    std::stack<double> s;
+    Stack<double> s;
     int i = 0;
     while (i < (int)postfix.size()) {
         if (postfix[i] == ' ') { i++; continue; }

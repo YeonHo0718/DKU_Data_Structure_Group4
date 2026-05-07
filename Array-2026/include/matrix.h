@@ -22,13 +22,13 @@ extern "C" {
 #include <string>
 
 /* ============================================================
- * Matrix 클래스: common.c 의 array()/freeArray() 를 내부적으로
- *               사용하는 C++ 래퍼 (1-Gobhagi 모듈라 설계 계승)
+ * Matrix 클래스: C++ 표준 방식(new[]/delete[])으로 메모리를
+ *               직접 관리하는 객체지향적 행렬 클래스
  * ============================================================ */
 class Matrix {
 public:
     int   rows, cols;
-    int **data;          /* common.c 의 array() 로 할당 */
+    int **data;          /* new[] / delete[] 로 관리되는 2차원 배열 */
 
     Matrix( int r, int c );
     Matrix( const Matrix& other );

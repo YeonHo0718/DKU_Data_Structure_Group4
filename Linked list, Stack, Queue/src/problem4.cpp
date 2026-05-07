@@ -11,21 +11,14 @@
  */
 
 #include <iostream>
-#include <stack>
 #include <string>
 #include <vector>
 #include <iomanip>
-
-struct MatchPair {
-    int openPos;
-    int closePos;
-    char openChar;
-    char closeChar;
-};
+#include "Stack.h"
 
 // Returns matched pairs; also reports mismatches
 std::vector<MatchPair> parenthesisMatch(const std::string& expr) {
-    std::stack<std::pair<char,int>> stk;   // (char, index)
+    Stack<std::pair<char,int>> stk;   // (char, index)
     std::vector<MatchPair> pairs;
     bool balanced = true;
 
