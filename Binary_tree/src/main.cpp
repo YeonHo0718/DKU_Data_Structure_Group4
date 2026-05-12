@@ -27,7 +27,7 @@
  * Problem 1
  * ============================================================ */
 
-static void testExprTree() {
+static void testExprTree(bool interactive) {
     puts("========================================");
     puts(" Problem 1: 산술식의 이진트리 구현");
     puts("========================================\n");
@@ -65,28 +65,30 @@ static void testExprTree() {
         putchar('\n');
     }
 
-    /* 사용자 입력 산술식 */
-    puts("--------------------------------------------------");
-    puts(" 사용자 입력 산술식 (빈 줄 입력 시 종료)");
-    puts("--------------------------------------------------");
+    if (interactive) {
+        /* 사용자 입력 산술식 */
+        puts("--------------------------------------------------");
+        puts(" 사용자 입력 산술식 (빈 줄 입력 시 종료)");
+        puts("--------------------------------------------------");
 
-    std::string line;
-    while (true) {
-        printf("산술식 입력> ");
-        fflush(stdout);
-        if (!std::getline(std::cin, line) || line.empty()) break;
-        try {
-            tree.build(line);
-            printf("  Infix     : "); tree.printInfix();
-            printf("  Prefix    : "); tree.printPrefix();
-            printf("  Postfix   : "); tree.printPostfix();
-            printf("  Level     : "); tree.printLevelOrder();
-            putchar('\n');
-        } catch (const std::exception &e) {
-            printf("  오류: %s\n\n", e.what());
+        std::string line;
+        while (true) {
+            printf("산술식 입력> ");
+            fflush(stdout);
+            if (!std::getline(std::cin, line) || line.empty()) break;
+            try {
+                tree.build(line);
+                printf("  Infix     : "); tree.printInfix();
+                printf("  Prefix    : "); tree.printPrefix();
+                printf("  Postfix   : "); tree.printPostfix();
+                printf("  Level     : "); tree.printLevelOrder();
+                putchar('\n');
+            } catch (const std::exception &e) {
+                printf("  오류: %s\n\n", e.what());
+            }
         }
+        putchar('\n');
     }
-    putchar('\n');
 }
 
 /* ============================================================
@@ -115,33 +117,38 @@ static int countWords(const std::string &s) {
     return cnt;
 }
 
-static void testHuffman() {
+static void testHuffman(bool interactive) {
     puts("========================================");
     puts(" Problem 2: Huffman 트리 기반 문자열 압축");
     puts("========================================\n");
 
-    /* 문단 입력 선택 */
-    printf("문단을 직접 입력하시겠습니까? (y/n, n=기본 문단 사용): ");
-    fflush(stdout);
-    std::string choice;
-    std::getline(std::cin, choice);
-
     std::string paragraph;
-    if (!choice.empty() && (choice[0] == 'y' || choice[0] == 'Y')) {
-        puts("50 단어 이상의 문단을 입력하세요.");
-        puts("(입력 종료: 빈 줄을 입력하세요)");
-        std::string line;
-        while (std::getline(std::cin, line) && !line.empty()) {
-            if (!paragraph.empty()) paragraph += ' ';
-            paragraph += line;
-        }
-        int wc = countWords(paragraph);
-        printf("  입력된 단어 수: %d\n", wc);
-        if (wc < 50) {
-            printf("  경고: 50 단어 미만입니다. 기본 문단을 사용합니다.\n\n");
+    if (interactive) {
+        /* 문단 입력 선택 */
+        printf("문단을 직접 입력하시겠습니까? (y/n, n=기본 문단 사용): ");
+        fflush(stdout);
+        std::string choice;
+        std::getline(std::cin, choice);
+
+        if (!choice.empty() && (choice[0] == 'y' || choice[0] == 'Y')) {
+            puts("50 단어 이상의 문단을 입력하세요.");
+            puts("(입력 종료: 빈 줄을 입력하세요)");
+            std::string line;
+            while (std::getline(std::cin, line) && !line.empty()) {
+                if (!paragraph.empty()) paragraph += ' ';
+                paragraph += line;
+            }
+            int wc = countWords(paragraph);
+            printf("  입력된 단어 수: %d\n", wc);
+            if (wc < 50) {
+                printf("  경고: 50 단어 미만입니다. 기본 문단을 사용합니다.\n\n");
+                paragraph = DEFAULT_PARAGRAPH;
+            }
+            putchar('\n');
+        } else {
             paragraph = DEFAULT_PARAGRAPH;
+            printf("  기본 문단 사용 (%d 단어)\n\n", countWords(paragraph));
         }
-        putchar('\n');
     } else {
         paragraph = DEFAULT_PARAGRAPH;
         printf("  기본 문단 사용 (%d 단어)\n\n", countWords(paragraph));
@@ -190,30 +197,32 @@ static void testHuffman() {
     printf("  원본 == 복원     : %s\n\n",
            (decoded == paragraph) ? "OK (완전 일치)" : "FAIL (불일치)");
 
-    /* (3) 출력된 코드를 입력받아 문자열을 출력 — 사용자 입력 */
-    puts("[ Huffman 비트열 입력 → 디코딩 ]");
-    puts("  위 인코딩 결과의 비트열 일부를 붙여넣어 디코딩을 확인할 수 있습니다.");
-    puts("  (빈 줄 입력 시 건너뜀)");
-    printf("비트열 입력> ");
-    fflush(stdout);
-    std::string userBits;
-    std::getline(std::cin, userBits);
+    if (interactive) {
+        /* (3) 출력된 코드를 입력받아 문자열을 출력 — 사용자 입력 */
+        puts("[ Huffman 비트열 입력 → 디코딩 ]");
+        puts("  위 인코딩 결과의 비트열 일부를 붙여넣어 디코딩을 확인할 수 있습니다.");
+        puts("  (빈 줄 입력 시 건너뜀)");
+        printf("비트열 입력> ");
+        fflush(stdout);
+        std::string userBits;
+        std::getline(std::cin, userBits);
 
-    if (!userBits.empty()) {
-        /* 공백 제거: 사용자가 8비트 단위로 띄어쓴 경우 대응 */
-        std::string cleanBits;
-        for (char c : userBits) {
-            if (c == '0' || c == '1') cleanBits += c;
+        if (!userBits.empty()) {
+            /* 공백 제거: 사용자가 8비트 단위로 띄어쓴 경우 대응 */
+            std::string cleanBits;
+            for (char c : userBits) {
+                if (c == '0' || c == '1') cleanBits += c;
+            }
+            try {
+                std::string userDecoded = ht.decode(cleanBits);
+                printf("  입력 비트 수  : %d bits\n", (int)cleanBits.size());
+                printf("  디코딩 결과   : \"%s\"\n\n", userDecoded.c_str());
+            } catch (const std::exception &e) {
+                printf("  디코딩 오류: %s\n\n", e.what());
+            }
+        } else {
+            puts("  (건너뜀)\n");
         }
-        try {
-            std::string userDecoded = ht.decode(cleanBits);
-            printf("  입력 비트 수  : %d bits\n", (int)cleanBits.size());
-            printf("  디코딩 결과   : \"%s\"\n\n", userDecoded.c_str());
-        } catch (const std::exception &e) {
-            printf("  디코딩 오류: %s\n\n", e.what());
-        }
-    } else {
-        puts("  (건너뜀)\n");
     }
 }
 
@@ -257,13 +266,23 @@ static void printDiscussion() {
  * main
  * ============================================================ */
 
-int main() {
+int main(int argc, char *argv[]) {
+    bool interactive = false;
+    for (int i = 1; i < argc; ++i) {
+        if (std::strcmp(argv[i], "-i") == 0 ||
+            std::strcmp(argv[i], "--interactive") == 0) {
+            interactive = true;
+        }
+    }
+
     puts("============================================================");
     puts(" 자료구조 과제 #4: 산술식의 이진트리와 Huffman 코드의 활용");
+    if (interactive)
+        puts(" (대화형 모드: 사용자 입력 활성화)");
     puts("============================================================\n");
 
-    testExprTree();
-    testHuffman();
+    testExprTree(interactive);
+    testHuffman(interactive);
     printDiscussion();
 
     return 0;
